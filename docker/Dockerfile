@@ -1,22 +1,23 @@
-FROM registry.access.redhat.com/ubi9/python-39:1-117.1684741281
+FROM ubuntu:20.04
+LABEL maintainer="wingnut0310 <wingnut0310@gmail.com>"
 
-# By default, listen on port 8081
-EXPOSE 8081/tcp
-ENV FLASK_PORT=8081
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV GOTTY_TAG_VER v1.0.1
 
-# Set the working directory in the container
-WORKDIR /projects
+RUN apt-get -y update && \
+    apt-get install -y curl && \
+    curl -sLk https://github.com/yudai/gotty/releases/download/${GOTTY_TAG_VER}/gotty_linux_amd64.tar.gz \
+    | tar xzC /usr/local/bin && \
+    apt-get purge --auto-remove -y curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists*
 
-# Copy the content of the local src directory to the working directory
-COPY . .
 
-# Install any dependencies
-RUN \
-  if [ -f requirements.txt ]; \
-    then pip install -r requirements.txt; \
-  elif [ `ls -1q *.txt | wc -l` == 1 ]; \
-    then pip install -r *.txt; \
-  fi
+COPY /run_gotty.sh /run_gotty.sh
 
-# Specify the command to run on container start
-CMD [ "python", "./app.py" ]
+RUN chmod 744 /run_gotty.sh
+
+EXPOSE 8080
+
+CMD ["/bin/bash","/run_gotty.sh"]
